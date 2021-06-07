@@ -2,36 +2,112 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.javawebinar.topjava.model.MealTo;
-import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.dao.MealDao;
+import ru.javawebinar.topjava.dao.impl.MealDaoImpl;
+import ru.javawebinar.topjava.model.Meal;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.time.LocalDateTime;
 
-
+@WebServlet("/")
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
+    private final MealDao mealDao;
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
-        request.setAttribute("meals", MealsUtil.getMeals());
+    public MealServlet() {
+        this.mealDao = new MealDaoImpl();
+    }
 
-        request.getRequestDispatcher("meals.jsp").forward(request, response);
-        log.info("received table");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
 
-        if (action.equals("delete")) {
-            String id = request.getParameter("id");
-            MealsUtil.deleteMeal(Integer.parseInt(id));
-            log.info("meal deleted");
-            request.setAttribute("meals", MealsUtil.getMeals());
-            request.getRequestDispatcher("meals.jsp").forward(request, response);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String action = request.getServletPath();
+        switch (action) {
+            case "/add":
+                showAddForm(request, response);
+                break;
+            case "/insert":
+                addMeal(request, response);
+                break;
+            case "/delete":
+                deleteMeal(request, response);
+                break;
+            case "/edit":
+                showEditForm(request, response);
+                break;
+            case "/update":
+                updateMeal(request, response);
+                break;
+            default:
+                listMeal(request, response);
+                break;
         }
+    }
 
+    private void listMeal(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        request.setAttribute("meals", mealDao.getAllMeals());
+        request.getRequestDispatcher("meals.jsp").forward(request, response);
+        log.info("table received");
+    }
+
+    private void showAddForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("edit-meal.jsp").forward(request, response);
+        log.info("add form received");
+    }
+
+    private void showEditForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        int id = Integer.parseInt(request.getParameter("id"));
+        Meal existingMeal = mealDao.getMealById(id);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("edit-meal.jsp");
+        request.setAttribute("meal", existingMeal);
+        dispatcher.forward(request, response);
+        log.info("edit form received");
+    }
+
+    private void addMeal(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        request.setCharacterEncoding("UTF-8");
+        LocalDateTime date = LocalDateTime.parse(request.getParameter("date"));
+        String description = request.getParameter("description");
+        int calories = Integer.parseInt(request.getParameter("calories"));
+
+        mealDao.addMeal(new Meal(date, description, calories));
+        response.sendRedirect("meals");
+        log.info("meal added");
+    }
+
+    private void updateMeal(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        request.setCharacterEncoding("UTF-8");
+        int id = Integer.parseInt(request.getParameter("id"));
+        LocalDateTime date = LocalDateTime.parse(request.getParameter("date"));
+        String description = request.getParameter("description");
+        int calories = Integer.parseInt(request.getParameter("calories"));
+
+        mealDao.updateMeal(id, new Meal(date, description, calories));
+        response.sendRedirect("meals");
+        log.info("meal updated");
+    }
+
+    private void deleteMeal(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        mealDao.deleteMeal(id);
+        response.sendRedirect("meals");
+        log.info("meal deleted");
     }
 }

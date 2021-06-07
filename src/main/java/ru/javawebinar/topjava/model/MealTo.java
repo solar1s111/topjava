@@ -53,9 +53,11 @@ public class MealTo {
 
     @Override
     public String toString() {
-        return getDate() + " "
+        return id + " "
+                + getDate() + " "
                 + getTime() + " "
                 + description + " "
-                + calories;
+                + calories + " "
+                + excess;
     }
 }
