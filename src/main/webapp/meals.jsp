@@ -24,8 +24,8 @@
                         <td style="height: 35px">${meal.date} ${meal.time}</td>
                         <td>${meal.description}</td>
                         <td>${meal.calories}</td>
-                        <td align="center"><a href="edit?id=<c:out value='${meal.id}' />">Update</a></td>
-                        <td align="center"><a href="delete?id=<c:out value='${meal.id}' />">Delete</a></td>
+                        <td align="center"><a href="edit?id=${meal.id}">Update</a></td>
+                        <td align="center"><a href="delete?id=${meal.id}">Delete</a></td>
                     </tr>
                 </c:forEach>
             </tbody>
