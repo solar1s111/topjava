@@ -3,7 +3,7 @@
 
 <html>
 <head>
-    <title>Meal</title>
+    <title>User</title>
     <style>
         dl {
             background: none repeat scroll 0 0 #FAFAFA;
@@ -27,21 +27,21 @@
 <section>
     <h3><a href="index.html">Home</a></h3>
     <hr>
-    <h2>${param.action == 'create' ? 'Create meal' : 'Edit meal'}</h2>
-    <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
-    <form method="post" action="meals">
+    <h2>${param.action == 'create' ? 'Create user' : 'Edit user'}</h2>
+    <jsp:useBean id="user" type="ru.javawebinar.topjava.model.User" scope="request"/>
+    <form method="post" action="users">
         <input type="hidden" name="id" value="${user.id}">
         <dl>
-            <dt>DateTime:</dt>
-            <dd><input type="datetime-local" value="${user.dateTime}" name="dateTime" required></dd>
+            <dt>Name:</dt>
+            <dd><input type="text" value="${user.name}" name="name" required></dd>
         </dl>
         <dl>
-            <dt>Description:</dt>
-            <dd><input type="text" value="${user.description}" size=40 name="description" required></dd>
+            <dt>Email:</dt>
+            <dd><input type="text" value="${user.email}" name="email" required></dd>
         </dl>
         <dl>
-            <dt>Calories:</dt>
-            <dd><input type="number" value="${user.calories}" name="calories" required></dd>
+            <dt>Password:</dt>
+            <dd><input type="text" value="${user.password}" name="password" required></dd>
         </dl>
         <button type="submit">Save</button>
         <button onclick="window.history.back()" type="button">Cancel</button>

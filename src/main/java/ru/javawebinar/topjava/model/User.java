@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
@@ -47,6 +48,11 @@ public class User extends AbstractNamedEntity {
 
     public Date getRegistered() {
         return registered;
+    }
+
+    public String getRegisteredToString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd");
+        return sdf.format(registered);
     }
 
     public void setRegistered(Date registered) {
