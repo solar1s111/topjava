@@ -3,24 +3,31 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import ru.javawebinar.topjava.model.AbstractNamedEntity;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryUserRepository implements UserRepository {
+
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepository.class);
+
     private static final Map<Integer, User> repository = new ConcurrentHashMap<>();
+
     private final AtomicInteger counter = new AtomicInteger(0);
-    public static List<User> users = new ArrayList<>();
+
+    public static final int USER_ID = 1;
 
     {
+        List<User> users = new ArrayList<>();
         users.add(new User(null, "Admin", "admin@gmail.com", "123456", Role.USER, Role.ADMIN));
         users.add(new User(null, "Pol", "pol@gmail.com", "159357", Role.USER));
         users.add(new User(null, "Mike", "mike@gmail.com", "852456", Role.USER));
@@ -36,7 +43,7 @@ public class InMemoryUserRepository implements UserRepository {
 
     @Override
     public User save(User user) {
-       log.info("save {}", user);
+        log.info("save {}", user);
         if (user.isNew()) {
             user.setId(counter.incrementAndGet());
             repository.put(user.getId(), user);
@@ -56,7 +63,8 @@ public class InMemoryUserRepository implements UserRepository {
         log.info("get all");
         List<User> userList = new ArrayList<>(repository.values());
         return userList.stream()
-                .sorted(Comparator.comparing(AbstractNamedEntity::getName))
+                .sorted(Comparator.comparing(User::getName, String::compareToIgnoreCase)
+                        .thenComparing(User::getEmail, String::compareToIgnoreCase))
                 .collect(Collectors.toList());
     }
 
@@ -64,7 +72,7 @@ public class InMemoryUserRepository implements UserRepository {
     public User getByEmail(String email) {
         log.info("getByEmail {}", email);
         return repository.values().stream()
-                .filter(user -> user.getEmail().toLowerCase().contains(email.toLowerCase()))
+                .filter(user -> user.getEmail().equalsIgnoreCase(email))
                 .findFirst()
                 .orElse(null);
     }

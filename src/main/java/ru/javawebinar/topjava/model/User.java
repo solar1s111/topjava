@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.model;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
@@ -50,11 +49,6 @@ public class User extends AbstractNamedEntity {
         return registered;
     }
 
-    public String getRegisteredToString() {
-        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd");
-        return sdf.format(registered);
-    }
-
     public void setRegistered(Date registered) {
         this.registered = registered;
     }
@@ -85,13 +79,13 @@ public class User extends AbstractNamedEntity {
 
     @Override
     public String toString() {
-        return "User (" +
+        return "User{" +
                 "id=" + id +
                 ", email=" + email +
                 ", name=" + name +
                 ", enabled=" + enabled +
                 ", roles=" + roles +
                 ", caloriesPerDay=" + caloriesPerDay +
-                ')';
+                '}';
     }
 }
