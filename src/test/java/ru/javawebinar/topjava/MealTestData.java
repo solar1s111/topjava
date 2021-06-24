@@ -41,7 +41,7 @@ public class MealTestData {
     }
 
     public static Meal getUpdatedForAdmin() {
-        Meal updated = new Meal(mealForAdmin2);
+        Meal updated = new Meal(mealForAdmin);
         updated.setDateTime(LocalDateTime.of(2021, Month.MAY, 20, 20, 10, 10));
         updated.setDescription("Обновленный ужин");
         updated.setCalories(3000);
