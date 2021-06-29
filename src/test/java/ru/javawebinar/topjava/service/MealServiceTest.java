@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Stopwatch;
@@ -18,6 +19,9 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -33,32 +37,25 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 public class MealServiceTest {
     private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
 
+    private static final List<String> INFO_MESSAGES = new ArrayList<>();
+
     @Autowired
     private MealService service;
 
     @Rule
     public Stopwatch stopwatch = new Stopwatch() {
-        private void logInfo(Description description, String status, long nanos) {
-            String testName = description.getMethodName();
-            int milliseconds = (int) (nanos / 1000000);
-            log.info("Test {} {}, spent {} ms", testName, status, milliseconds);
-        }
-
-        @Override
-        protected void succeeded(long nanos, Description description) {
-            logInfo(description, "succeeded", nanos);
-        }
-
-        @Override
-        protected void failed(long nanos, Throwable e, Description description) {
-            logInfo(description, "failed", nanos);
-        }
-
         @Override
         protected void finished(long nanos, Description description) {
-            logInfo(description, "finished", nanos);
+            String infoMessage = String.format("Test %s finished, spent %s ms", description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
+            INFO_MESSAGES.add(infoMessage);
+            log.info(infoMessage);
         }
     };
+
+    @AfterClass
+    public static void printInfoMessages() {
+        INFO_MESSAGES.forEach(System.out::println);
+    }
 
     @Test
     public void delete() {
