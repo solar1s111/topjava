@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +17,10 @@ import static ru.javawebinar.topjava.UserTestData.*;
 
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Autowired
-    public UserService service;
+    private UserService service;
 
     @Autowired
-    public CacheManager cacheManager;
+    private CacheManager cacheManager;
 
     @Before
     public void setup() {

@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 public abstract class AbstractMealServiceTest extends AbstractServiceTest {
     @Autowired
-    public MealService service;
+    private MealService service;
 
     @Test
     public void delete() {
