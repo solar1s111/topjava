@@ -1,6 +1,8 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -21,6 +23,11 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
 
     @Autowired
     protected MealService service;
+
+    @Before
+    public void setup() {
+        Assume.assumeFalse(checkJdbcProfileWithExceptionMethod());
+    }
 
     @Test
     public void delete() {
