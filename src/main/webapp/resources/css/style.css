@@ -16,11 +16,11 @@ dd {
 }
 
 tr[data-mealExcess="false"] {
-    color: green;
+    color: #008000FF;
 }
 
 tr[data-mealExcess="true"] {
-    color: red;
+    color: #FF0000FF;
 }
 
 header, footer {
