@@ -27,10 +27,6 @@ public class MealRestControllerTest extends AbstractControllerTest {
 
     private static final int USER_ID = SecurityUtil.authUserId();
 
-    private static final String START_DATE_TIME = "2020-01-30T10:00:00";
-
-    private static final String END_DATE_TIME = "2020-01-30T20:00:59";
-
     @Autowired
     private MealService mealService;
 
@@ -55,7 +51,8 @@ public class MealRestControllerTest extends AbstractControllerTest {
     @Test
     void getBetween() throws Exception {
         List<MealTo> mealsToFilter = MealsUtil.getTos(List.of(meal3, meal2, meal1), USER_ID);
-
+        String START_DATE_TIME = "2020-01-30T10:00:00";
+        String END_DATE_TIME = "2020-01-30T20:00:59";
         perform(MockMvcRequestBuilders.get(REST_URL + "filter?startDateTime=" + START_DATE_TIME
                 + "&endDateTime=" + END_DATE_TIME))
                 .andExpect(status().isOk())
